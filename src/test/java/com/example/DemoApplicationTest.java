@@ -2,12 +2,14 @@ package com.example;
 
 import com.example.infra.document.Item;
 import com.example.infra.repository.ItemRespository;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.Arrays;
@@ -43,6 +45,18 @@ public class DemoApplicationTest {
 				.expectSubscription()
 				.expectNextCount(3)
 				.verifyComplete();
+	}
+
+
+	@Test
+	public void shouldGetSpecificId(){
+		Item item = repo.save(new Item(null, "TV", 1200.99)).block();
+		StepVerifier.create(repo.findById(item.getId()))
+				.expectSubscription()
+				.expectNextMatches(record->	record.getId().equals(item.getId()))
+				.verifyComplete();
+
+
 	}
 
 }
