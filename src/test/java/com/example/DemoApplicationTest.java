@@ -55,8 +55,17 @@ public class DemoApplicationTest {
 				.expectSubscription()
 				.expectNextMatches(record->	record.getId().equals(item.getId()))
 				.verifyComplete();
+	}
 
-
+	@Test
+	public void shouldGetByDescription(){
+		repo.save(new Item(null, "TV", 1200.99)).block();
+		repo.save(new Item(null, "TV", 1200.99)).block();
+		repo.save(new Item(null, "TV", 1200.99)).block();
+		StepVerifier.create(repo.findByDescription("TV"))
+				.expectSubscription()
+				.expectNextCount(3)
+				.verifyComplete();
 	}
 
 }

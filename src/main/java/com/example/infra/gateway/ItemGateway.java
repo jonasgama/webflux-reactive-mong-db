@@ -26,4 +26,9 @@ public class ItemGateway {
     public Flux<Item> save(List<Item> items){
        return repository.saveAll(Flux.fromIterable(items));
     }
+
+    public Flux<Item> getByDescription(String description){
+        return repository.findByDescription(description);
+    }
+
 }
