@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -65,6 +66,24 @@ public class DemoApplicationTest {
 		StepVerifier.create(repo.findByDescription("TV"))
 				.expectSubscription()
 				.expectNextCount(3)
+				.verifyComplete();
+	}
+
+
+	@Test
+	public void shouldUpdateItem(){
+		Double updatedValue = 229.99;
+		repo.save(new Item(null, "Phone", 129.99)).block();
+		Flux<Item> updatedPhone = repo.findByDescription("Phone")
+				.map(item -> {
+					item.setPrice(updatedValue);
+					return item;
+				})
+				.flatMap(item -> repo.save(item));
+
+		StepVerifier.create(updatedPhone)
+				.expectSubscription()
+				.expectNextMatches(record->	record.getPrice().equals(updatedValue))
 				.verifyComplete();
 	}
 
