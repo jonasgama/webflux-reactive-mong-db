@@ -87,4 +87,21 @@ public class DemoApplicationTest {
 				.verifyComplete();
 	}
 
+
+	@Test
+	public void shouldDeleteItem(){
+		String key = "REMOVE";
+		repo.save(new Item(key, "Stereo", 99.99)).block();
+		Mono<Void> deletedItem = repo.deleteById(key);
+
+		StepVerifier.create(deletedItem)
+				.expectSubscription()
+				.verifyComplete();
+
+		StepVerifier.create(repo.findById(key))
+				.expectSubscription()
+				.expectNextCount(0)
+				.verifyComplete();
+	}
+
 }
