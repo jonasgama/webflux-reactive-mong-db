@@ -1,8 +1,7 @@
 package com.example;
 
 import com.example.infra.document.Item;
-import com.example.infra.repository.ItemRespository;
-import org.assertj.core.api.Assertions;
+import com.example.infra.repository.ItemRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,10 +17,10 @@ import java.util.List;
 
 @DataMongoTest
 @RunWith(SpringRunner.class)
-public class DemoApplicationTest {
+public class RepositoryTest {
 
 	@Autowired
-	private ItemRespository repo;
+	private ItemRepository repo;
 
 	@Before
 	public void setup() {

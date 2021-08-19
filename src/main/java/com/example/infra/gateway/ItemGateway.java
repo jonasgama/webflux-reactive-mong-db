@@ -1,7 +1,7 @@
 package com.example.infra.gateway;
 
 import com.example.infra.document.Item;
-import com.example.infra.repository.ItemRespository;
+import com.example.infra.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
@@ -13,7 +13,7 @@ import java.util.List;
 public class ItemGateway {
 
     @Autowired
-    private ItemRespository repository;
+    private ItemRepository repository;
 
     public Flux<Item> get(){
         return repository.findAll();
