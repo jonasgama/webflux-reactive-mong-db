@@ -19,6 +19,11 @@ public class ItemGateway {
         return repository.findAll();
     }
 
+    public Mono<Item> get(String id){
+        return repository.findById(id);
+    }
+
+
     public Mono<Void> remove(){
         return repository.deleteAll();
     }

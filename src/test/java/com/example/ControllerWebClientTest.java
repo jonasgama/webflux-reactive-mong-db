@@ -54,7 +54,29 @@ public class ControllerWebClientTest {
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBodyList(Item.class)
                 .hasSize(3);
+    }
 
+    @Test
+    public void shouldGetSpecificItem(){
+    String key =  "KEY-TEST";
+    String description = "Eye-Glasses";
+     repo.save( new Item(key, description, 87.55)).block();
+
+
+        client.get().uri("/v1/{id}", key)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+               .expectBody()
+                .jsonPath("$.description", description);
+    }
+
+
+    @Test
+    public void shouldNotFoundItem(){
+        client.get().uri("/v1/{id}", "Inexistent")
+                .exchange()
+                .expectStatus().isNotFound();
     }
 
     private List<Item> bulk(){
