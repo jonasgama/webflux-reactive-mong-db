@@ -32,6 +32,10 @@ public class ItemGateway {
        return repository.saveAll(Flux.fromIterable(items));
     }
 
+    public Mono<Item> save(Item item){
+       return repository.save(item);
+    }
+
     public Flux<Item> getByDescription(String description){
         return repository.findByDescription(description);
     }

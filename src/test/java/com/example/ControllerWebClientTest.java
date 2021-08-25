@@ -79,6 +79,15 @@ public class ControllerWebClientTest {
                 .expectStatus().isNotFound();
     }
 
+    @Test
+    public void shouldCreateItem(){
+        Item newItem = new Item("created-item", "nothing", 1.00);
+        client.post().uri("/v1")
+                .body(newItem, Item.class)
+                .exchange()
+                .expectStatus().isCreated();
+    }
+
     private List<Item> bulk(){
         return Arrays.asList(
                 new Item("A", "Computer", 2999.99),

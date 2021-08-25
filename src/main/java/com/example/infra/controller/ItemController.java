@@ -5,10 +5,7 @@ import com.example.infra.gateway.ItemGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -31,12 +28,22 @@ public class ItemController {
                 .defaultIfEmpty(notFound());
     }
 
+    @PostMapping("v1")
+    public Mono<ResponseEntity<Item>> saveItem(@RequestBody Item body){
+        return gateway.save(body)
+                .map(item -> created(item));
+    }
+
     private ResponseEntity<Item> notFound(){
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
     private ResponseEntity<Item> ok(Object body){
         return new ResponseEntity(body, HttpStatus.OK);
+    }
+
+    private ResponseEntity<Item> created(Object body){
+        return new ResponseEntity(body, HttpStatus.CREATED);
     }
 
 
