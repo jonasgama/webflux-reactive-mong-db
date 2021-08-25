@@ -17,6 +17,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.List;
@@ -83,7 +84,9 @@ public class ControllerWebClientTest {
     public void shouldCreateItem(){
         Item newItem = new Item("created-item", "nothing", 1.00);
         client.post().uri("/v1")
-                .body(newItem, Item.class)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .body(Mono.just(newItem), Item.class)
                 .exchange()
                 .expectStatus().isCreated();
     }
