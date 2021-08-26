@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 import java.util.List;
 
 
@@ -28,6 +29,10 @@ public class ItemGateway {
         return repository.deleteAll();
     }
 
+    public Mono<Void> remove(String id){
+        return repository.deleteById(id);
+    }
+
     public Flux<Item> save(List<Item> items){
        return repository.saveAll(Flux.fromIterable(items));
     }
@@ -39,5 +44,4 @@ public class ItemGateway {
     public Flux<Item> getByDescription(String description){
         return repository.findByDescription(description);
     }
-
 }

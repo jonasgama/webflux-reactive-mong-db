@@ -22,28 +22,38 @@ public class ItemController {
     }
 
     @GetMapping("v1/{id}")
-    public Mono<ResponseEntity<Item>> getItem(@PathVariable String id){
+    public Mono<ResponseEntity<Object>> get(@PathVariable String id){
         return gateway.get(id)
                 .map(item -> ok(item))
                 .defaultIfEmpty(notFound());
     }
 
+    @DeleteMapping("v1/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public Mono<Void> delete(@PathVariable String id){
+        return gateway.remove(id);
+    }
+
     @PostMapping("v1")
-    public Mono<ResponseEntity<Item>> saveItem(@RequestBody Item body){
+    public Mono<ResponseEntity<Object>> save(@RequestBody Item body){
         return gateway.save(body)
                 .map(item -> created(item));
     }
 
-    private ResponseEntity<Item> notFound(){
-        return new ResponseEntity(HttpStatus.NOT_FOUND);
+    private ResponseEntity<Object> notFound(){
+        return ResponseEntity.notFound().build();
     }
 
-    private ResponseEntity<Item> ok(Object body){
-        return new ResponseEntity(body, HttpStatus.OK);
+    private ResponseEntity<Object> ok(Object body){
+        return ResponseEntity.ok(body);
     }
 
-    private ResponseEntity<Item> created(Object body){
-        return new ResponseEntity(body, HttpStatus.CREATED);
+    private ResponseEntity<Object> removed(){
+        return ResponseEntity.noContent().build();
+    }
+
+    private ResponseEntity<Object> created(Object body){
+        return ResponseEntity.created(null).build();
     }
 
 

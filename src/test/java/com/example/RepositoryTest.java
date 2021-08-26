@@ -58,6 +58,14 @@ public class RepositoryTest {
 	}
 
 	@Test
+	public void shouldFailingGetSpecificId(){
+		StepVerifier.create(repo.findById("not-found"))
+				.expectSubscription()
+				.expectNextCount(0)
+				.verifyComplete();
+	}
+
+	@Test
 	public void shouldGetByDescription(){
 		repo.save(new Item(null, "TV", 1200.99)).block();
 		repo.save(new Item(null, "TV", 1200.99)).block();

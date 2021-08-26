@@ -1,19 +1,15 @@
 package com.example;
 
 import com.example.infra.document.Item;
-import com.example.infra.gateway.ItemGateway;
 import com.example.infra.repository.ItemRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
@@ -68,8 +64,39 @@ public class ControllerWebClientTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
-               .expectBody()
+                .expectBody()
                 .jsonPath("$.description", description);
+    }
+
+
+    @Test
+    public void shouldDeleteSpecificItem(){
+        String key =  "KEY-REMOVE";
+        String description = "Router";
+        repo.save( new Item(key, description, 87.55)).block();
+
+        client.delete().uri("/v1/{id}", key)
+                .exchange()
+                .expectStatus().isAccepted()
+                .expectBody(Void.class);
+
+        client.get().uri("/v1/{id}", key)
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
+    @Test
+    public void shouldHandleNotFoundItemToBeDeleted(){
+        String key =  "KEY-NOT_FOUND";
+
+        client.delete().uri("/v1/{id}", key)
+                .exchange()
+                .expectStatus().isAccepted()
+                .expectBody(Void.class);
+
+        client.get().uri("/v1/{id}", key)
+                .exchange()
+                .expectStatus().isNotFound();
     }
 
 
