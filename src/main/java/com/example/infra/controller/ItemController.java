@@ -34,6 +34,14 @@ public class ItemController {
         return gateway.remove(id);
     }
 
+    @PutMapping("v1/{id}")
+    public Mono<ResponseEntity<Object>> update(@PathVariable String id, @RequestBody Item body){
+        return gateway.get(id)
+                .flatMap(item -> gateway.save(body))
+                .map(item -> notContent())
+                .defaultIfEmpty(notFound());
+    }
+
     @PostMapping("v1")
     public Mono<ResponseEntity<Object>> save(@RequestBody Item body){
         return gateway.save(body)
@@ -48,7 +56,7 @@ public class ItemController {
         return ResponseEntity.ok(body);
     }
 
-    private ResponseEntity<Object> removed(){
+    private ResponseEntity<Object> notContent(){
         return ResponseEntity.noContent().build();
     }
 

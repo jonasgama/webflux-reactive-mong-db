@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.util.Arrays;
 import java.util.List;
@@ -116,6 +117,34 @@ public class ControllerWebClientTest {
                 .body(Mono.just(newItem), Item.class)
                 .exchange()
                 .expectStatus().isCreated();
+    }
+
+    @Test
+    public void shouldUpdateItem(){
+        String key = "to-be-updated";
+        Item newItem = new Item("to-be-updated", "mask", 1.00);
+        repo.save(newItem).block();
+
+        newItem.setDescription("female mask");
+        newItem.setPrice(1.29);
+
+        client.put().uri("/v1/{id}", key)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .body(Mono.just(newItem), Item.class)
+                .exchange()
+                .expectStatus().isNoContent();
+
+        Flux<Item> responseBody = client.get().uri("/v1/{id}", key)
+                .exchange()
+                .expectStatus().isOk()
+                .returnResult(Item.class)
+                .getResponseBody();
+
+        StepVerifier.create(responseBody)
+                .expectSubscription()
+                .expectNextMatches(item -> item.getPrice().equals(1.29) && item.getDescription().equals("female mask") )
+                .verifyComplete();
     }
 
     private List<Item> bulk(){
