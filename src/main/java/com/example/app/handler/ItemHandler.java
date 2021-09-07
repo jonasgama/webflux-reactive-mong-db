@@ -21,4 +21,15 @@ public class ItemHandler{
         return ServerResponse.ok().body(gateway.get(),Item.class);
     }
 
+    public Mono<ServerResponse> get(ServerRequest request){
+        return request
+                .bodyToMono(ServerRequest.class)
+                        .map(serverRequest -> serverRequest.pathVariable("id"))
+                        .flatMap(id ->
+                                ServerResponse.ok().body(gateway.get(id),Item.class)
+                                        .switchIfEmpty(
+                                                ServerResponse.notFound().build())
+                        );
+    }
+
 }

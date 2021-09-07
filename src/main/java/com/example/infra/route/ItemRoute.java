@@ -18,7 +18,12 @@ public class ItemRoute {
     public RouterFunction<ServerResponse> routerFunction(ItemHandler handler){
         return route(GET("/v2")
                         .and(accept(APPLICATION_JSON)
+                        .and(contentType(APPLICATION_JSON))),
+                        handler::getAll)
+                .andRoute(GET("/v2/{id}")
+                                .and(accept(APPLICATION_JSON)
                                 .and(contentType(APPLICATION_JSON))),
-                handler::getAll);
+                        handler::get);
+
     }
 }

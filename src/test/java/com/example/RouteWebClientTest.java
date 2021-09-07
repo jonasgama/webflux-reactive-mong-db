@@ -53,6 +53,22 @@ public class RouteWebClientTest {
                 .hasSize(3);
     }
 
+    @Test
+    public void shouldGetSpecificItem(){
+        String key =  "KEY-TEST-Functional";
+        String description = "Cabinet";
+        repo.save( new Item(key, description, 87.55)).block();
+
+
+        client.get().uri("/v2/{id}", key)
+                .header("Content-Type","application/json")
+                .header("accept","application/json")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.description", description);
+    }
+
     private List<Item> bulk(){
         return Arrays.asList(
                 new Item("A", "Computer", 2999.99),
