@@ -13,6 +13,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.List;
@@ -64,9 +65,28 @@ public class RouteWebClientTest {
                 .header("Content-Type","application/json")
                 .header("accept","application/json")
                 .exchange()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$.description", description);
+    }
+
+    @Test
+    public void shouldNotFoundItem(){
+        client.get().uri("/v2/{id}", "Inexistent")
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
+    @Test
+    public void shouldCreateItem(){
+        Item newItem = new Item("route-created-item", "nothing", 1.00);
+        client.post().uri("/v2")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .body(Mono.just(newItem), Item.class)
+                .exchange()
+                .expectStatus().isCreated();
     }
 
     private List<Item> bulk(){

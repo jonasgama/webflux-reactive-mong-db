@@ -23,7 +23,11 @@ public class ItemRoute {
                 .andRoute(GET("/v2/{id}")
                                 .and(accept(APPLICATION_JSON)
                                 .and(contentType(APPLICATION_JSON))),
-                        handler::get);
+                        handler::get)
+                .andRoute(POST("/v2")
+                                .and(accept(APPLICATION_JSON)
+                                .and(contentType(APPLICATION_JSON))),
+                        handler::insert);
 
     }
 }
