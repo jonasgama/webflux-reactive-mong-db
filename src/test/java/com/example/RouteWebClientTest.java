@@ -89,6 +89,41 @@ public class RouteWebClientTest {
                 .expectStatus().isCreated();
     }
 
+
+    @Test
+    public void shouldDeleteSpecificItem(){
+        String key =  "KEY-ROUTE-REMOVE";
+        String description = "Router";
+        repo.save( new Item(key, description, 87.55)).block();
+
+        client.delete().uri("/v2/{id}", key)
+                .header("Content-Type","application/json")
+                .header("accept","application/json")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Void.class);
+
+        client.get().uri("/v2/{id}", key)
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
+    @Test
+    public void shouldHandleNotFoundItemToBeDeleted(){
+        String key =  "KEY-NOT_FOUND";
+
+        client.delete().uri("/v2/{id}", key)
+                .header("Content-Type","application/json")
+                .header("accept","application/json")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Void.class);
+
+        client.get().uri("/v2/{id}", key)
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
     private List<Item> bulk(){
         return Arrays.asList(
                 new Item("A", "Computer", 2999.99),

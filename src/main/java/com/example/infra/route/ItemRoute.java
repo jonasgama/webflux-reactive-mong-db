@@ -1,7 +1,6 @@
 package com.example.infra.route;
 
 import com.example.app.handler.ItemHandler;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.server.RouterFunction;
@@ -27,7 +26,11 @@ public class ItemRoute {
                 .andRoute(POST("/v2")
                                 .and(accept(APPLICATION_JSON)
                                 .and(contentType(APPLICATION_JSON))),
-                        handler::insert);
+                        handler::insert)
+                .andRoute(DELETE("/v2/{id}")
+                                .and(accept(APPLICATION_JSON)
+                                        .and(contentType(APPLICATION_JSON))),
+                        handler::remove);
 
     }
 }
