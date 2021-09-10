@@ -19,15 +19,12 @@ public class ItemHandler{
     }
 
     public Mono<ServerResponse> get(ServerRequest request){
-        return request
-                .bodyToMono(ServerRequest.class)
-                        .map(serverRequest -> serverRequest.pathVariable("id"))
-                        .flatMap(id ->
-                                ServerResponse.ok()
-                                        .body(gateway.get(id),Item.class)
-                                        .switchIfEmpty(
-                                                ServerResponse.notFound().build())
-                        );
+        String id = request.pathVariable("id");
+        return ServerResponse.ok()
+                            .body(gateway.get(id),Item.class)
+                            .switchIfEmpty(
+                                    ServerResponse.notFound().build());
+
     }
 
     public Mono<ServerResponse> insert(ServerRequest request){
@@ -38,12 +35,8 @@ public class ItemHandler{
     }
 
     public Mono<ServerResponse> remove(ServerRequest request){
-        return request
-                .bodyToMono(ServerRequest.class)
-                .map(serverRequest -> serverRequest.pathVariable("id"))
-                .flatMap(id -> gateway.remove(id))
-                .flatMap(result ->
-                        ServerResponse.ok().build());
+        String id = request.pathVariable("id");
+        return ServerResponse.ok().body(gateway.remove(id),Void.class);
     }
 
 }

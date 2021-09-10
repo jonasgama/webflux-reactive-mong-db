@@ -65,7 +65,6 @@ public class RouteWebClientTest {
                 .header("Content-Type","application/json")
                 .header("accept","application/json")
                 .exchange()
-                .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$.description", description);
