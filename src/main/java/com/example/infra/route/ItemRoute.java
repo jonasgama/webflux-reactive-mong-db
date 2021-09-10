@@ -16,24 +16,19 @@ public class ItemRoute {
     @Bean
     public RouterFunction<ServerResponse> routerFunction(ItemHandler handler){
         return route(GET("/v2")
-                        .and(accept(APPLICATION_JSON)
-                        .and(contentType(APPLICATION_JSON))),
+                        .and(contentType(APPLICATION_JSON)),
                         handler::getAll)
                 .andRoute(GET("/v2/{id}")
-                                .and(accept(APPLICATION_JSON)
-                                .and(contentType(APPLICATION_JSON))),
+                                .and(contentType(APPLICATION_JSON)),
                         handler::get)
                 .andRoute(POST("/v2")
-                                .and(accept(APPLICATION_JSON)
-                                .and(contentType(APPLICATION_JSON))),
+                                .and(contentType(APPLICATION_JSON)),
                         handler::insert)
                 .andRoute(DELETE("/v2/{id}")
-                                .and(accept(APPLICATION_JSON)
-                                        .and(contentType(APPLICATION_JSON))),
+                                        .and(contentType(APPLICATION_JSON)),
                         handler::remove)
                 .andRoute(PUT("/v2/{id}")
-                                .and(accept(APPLICATION_JSON)
-                                        .and(contentType(APPLICATION_JSON))),
+                                        .and(contentType(APPLICATION_JSON)),
                         handler::update);
 
     }

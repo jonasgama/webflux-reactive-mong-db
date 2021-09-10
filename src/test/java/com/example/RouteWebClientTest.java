@@ -14,9 +14,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
@@ -121,6 +125,38 @@ public class RouteWebClientTest {
         client.get().uri("/v2/{id}", key)
                 .exchange()
                 .expectStatus().isNotFound();
+    }
+
+    @Test
+    public void shouldUpdateItem(){
+        String key = "route-to-be-updated";
+        Item newItem = new Item(key, "mask", 1.00);
+        repo.save(newItem).block();
+
+        newItem.setDescription("female mask");
+        newItem.setPrice(1.29);
+
+       client.put().uri("/v2/{id}", key)
+                .header("Content-Type", "application/json")
+                .header("accept", "application/json")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .body(Mono.just(newItem), Item.class)
+                .exchange()
+                .expectStatus().isNoContent()
+                .expectBody(Void.class);
+
+        client.get().uri("/v2/{id}", key)
+               .header("Content-Type","application/json")
+               .header("accept","application/json")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Item.class)
+                .consumeWith(resp -> {
+                    Item item = resp.getResponseBody();
+                    assertTrue(item.getPrice()==1.29);
+                    assertEquals(item.getDescription(), "female mask");
+                });
     }
 
     private List<Item> bulk(){
