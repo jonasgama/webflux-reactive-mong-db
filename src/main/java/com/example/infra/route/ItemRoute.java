@@ -30,7 +30,11 @@ public class ItemRoute {
                 .andRoute(DELETE("/v2/{id}")
                                 .and(accept(APPLICATION_JSON)
                                         .and(contentType(APPLICATION_JSON))),
-                        handler::remove);
+                        handler::remove)
+                .andRoute(PUT("/v2/{id}")
+                                .and(accept(APPLICATION_JSON)
+                                        .and(contentType(APPLICATION_JSON))),
+                        handler::update);
 
     }
 }

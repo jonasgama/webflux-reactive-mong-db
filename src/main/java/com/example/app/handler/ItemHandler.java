@@ -39,4 +39,18 @@ public class ItemHandler{
         return ServerResponse.ok().body(gateway.remove(id),Void.class);
     }
 
+
+    public Mono<ServerResponse> update(ServerRequest request){
+        String id = request.pathVariable("id");
+        return request
+                .bodyToMono(Item.class)
+                .flatMap(item -> gateway.get(id)
+                        .map(toUpdate -> {
+                            toUpdate.setDescription(item.getDescription());
+                            toUpdate.setPrice(item.getPrice());
+                            return toUpdate;
+                        })).flatMap(updated -> gateway.save(updated))
+                .flatMap(result->ServerResponse.noContent().build());
+    }
+
 }
