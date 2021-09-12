@@ -1,12 +1,7 @@
-package com.example.infra.document;
+package com.example.demo.app.domain;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+public class ItemClient {
 
-@Document
-public class Item {
-
-    @Id
     private String id;
     private String description;
     private Double price;
@@ -36,7 +31,10 @@ public class Item {
         this.price = price;
     }
 
-    public Item(String id, String description, Double price){
+    public ItemClient() {
+    }
+
+    public ItemClient(String id, String description, Double price){
         this.id = id;
         this.description = description;
         this.price = price;
