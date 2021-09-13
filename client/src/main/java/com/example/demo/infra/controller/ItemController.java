@@ -2,25 +2,37 @@ package com.example.demo.infra.controller;
 
 import com.example.demo.app.domain.ItemClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @RestController
 public class ItemController {
 
     private WebClient web;
 
-    public ItemController(){
+    public ItemController() {
         web = WebClient.create("http://localhost:8082");
     }
 
     @GetMapping("/client/items")
-    public Flux<ItemClient> getItems(){
+    public Flux<ItemClient> getItems() {
         return web.get().uri("/v2")
-                .header("Content-Type", "application/json")
-                .retrieve()
-                .bodyToFlux(ItemClient.class)
-                .log("getting all saved items");
+            .header("Content-Type", "application/json")
+            .retrieve()
+            .bodyToFlux(ItemClient.class)
+            .log("getting all saved items");
+    }
+
+
+    @GetMapping("/client/items/{id}")
+    public Mono<ItemClient> getItems(@PathVariable String id) {
+        return web.get().uri("/v2/{id}", id)
+            .header("Content-Type", "application/json")
+            .retrieve()
+            .bodyToMono(ItemClient.class);
+
     }
 }
