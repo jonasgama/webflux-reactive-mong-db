@@ -3,6 +3,8 @@ package com.example.demo.infra.controller;
 import com.example.demo.app.domain.ItemClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
@@ -33,6 +35,17 @@ public class ItemController {
             .header("Content-Type", "application/json")
             .retrieve()
             .bodyToMono(ItemClient.class);
+
+    }
+
+    @PostMapping("/client/items")
+    public Mono<ItemClient> saveItem(@RequestBody ItemClient body) {
+        return web.post().uri("/v2")
+            .header("Content-Type", "application/json")
+            .body(Mono.just(body), ItemClient.class)
+            .retrieve()
+            .bodyToMono(ItemClient.class)
+            .log("new item has been created");
 
     }
 }
