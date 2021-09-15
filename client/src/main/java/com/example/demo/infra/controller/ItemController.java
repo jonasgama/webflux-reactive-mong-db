@@ -4,6 +4,7 @@ import com.example.demo.app.domain.ItemClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -46,6 +47,18 @@ public class ItemController {
             .retrieve()
             .bodyToMono(ItemClient.class)
             .log("new item has been created");
+    }
+
+    @PutMapping("/client/items/{id}")
+    public Mono<ItemClient> updateItem(@PathVariable String id, @RequestBody ItemClient body) {
+        return web.put().uri("/v2/{id}", id)
+            .header("Content-Type", "application/json")
+            .body(Mono.just(body), ItemClient.class)
+            .retrieve()
+            .bodyToMono(ItemClient.class)
+            .log("new item has been updated");
 
     }
+
+
 }
