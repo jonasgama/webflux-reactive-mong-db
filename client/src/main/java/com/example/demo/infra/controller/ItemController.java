@@ -1,6 +1,7 @@
 package com.example.demo.infra.controller;
 
 import com.example.demo.app.domain.ItemClient;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,6 +58,17 @@ public class ItemController {
             .retrieve()
             .bodyToMono(ItemClient.class)
             .log("new item has been updated");
+
+    }
+
+
+    @DeleteMapping("/client/items/{id}")
+    public Mono<ItemClient> deleteItem(@PathVariable String id) {
+        return web.delete().uri("/v2/{id}", id)
+            .header("Content-Type", "application/json")
+            .retrieve()
+            .bodyToMono(ItemClient.class)
+            .log("new item has been removed");
 
     }
 
