@@ -159,6 +159,19 @@ public class RouteWebClientTest {
                 });
     }
 
+    @Test
+    public void shouldHandleEmptyIdWhenUpdatingItem(){
+        client.put().uri("/v2/{id}", "     ")
+            .header("Content-Type", "application/json")
+            .header("accept", "application/json")
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)
+            .body(Mono.just(new Item()), Item.class)
+            .exchange()
+            .expectBody()
+            .jsonPath("$.message", "error: Optional[java.lang.RuntimeException: null id], cause: Optional[{id=     }]");
+    }
+
     private List<Item> bulk(){
         return Arrays.asList(
                 new Item("A", "Computer", 2999.99),

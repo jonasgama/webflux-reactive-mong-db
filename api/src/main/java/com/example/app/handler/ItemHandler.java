@@ -42,6 +42,9 @@ public class ItemHandler{
 
     public Mono<ServerResponse> update(ServerRequest request){
         String id = request.pathVariable("id");
+        if(id.isBlank()){
+            throw new RuntimeException("null id");
+        }
         return request
                 .bodyToMono(Item.class)
                 .flatMap(item -> gateway.get(id)
