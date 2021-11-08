@@ -47,7 +47,7 @@ public class ItemCapped {
 
     @Override
     public String toString() {
-        return "Item{" +
+        return "Item-Stream{" +
                 "id='" + id + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
