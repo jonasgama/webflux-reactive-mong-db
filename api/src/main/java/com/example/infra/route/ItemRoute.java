@@ -1,8 +1,10 @@
 package com.example.infra.route;
 
 import com.example.app.handler.ItemHandler;
+import com.example.app.handler.ItemStreamHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
@@ -31,5 +33,11 @@ public class ItemRoute {
                                         .and(contentType(APPLICATION_JSON)),
                         handler::update);
 
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> routerStreamFunction(ItemStreamHandler handler){
+        return route(GET("/stream/v2"),
+            handler::getStreamAll);
     }
 }

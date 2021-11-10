@@ -55,5 +55,4 @@ public class ItemHandler{
                         })).flatMap(updated -> gateway.save(updated))
                 .flatMap(result->ServerResponse.noContent().build());
     }
-
 }
